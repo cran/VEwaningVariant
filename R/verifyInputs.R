@@ -36,8 +36,10 @@
   # this avoids removal of cases with NA in unused data
   data <- data[,c(unlist(x = dObj), covs),drop=FALSE]
 
-  # data must be complete
-  complete <- stats::complete.cases(data)
+  # data must be complete (do not consider lag, which can be
+  # NA or Inf when full efficacy has not been reached
+  ilag <- match(dObj$lag, colnames(x = data))
+  complete <- stats::complete.cases(data[,-ilag,drop=FALSE])
   nRm <- sum(!complete)
   if (nRm > 0L) {
     data <- data[complete,,drop=FALSE]
@@ -155,17 +157,21 @@
   }
 
   ## lag
-  # again, this is hear only in anticipation of individual specific lag
 
   # lag cannot be negative
-  if (any(data[,dObj$lag] < 0)) {
+  if (any(data[,dObj$lag] < 0, na.rm = TRUE)) {
     stop("lag must be non-negative", call. = FALSE)
   }
 
-  # if provided as infinity, set to value > L
-  if (any(is.infinite(x = data[,dObj$lag]))) {
-    tst <- is.infinite(x = data[,dObj$lag])
-    data[tst,dObj$lag] <- L + 10.0
+  # if provided as infinity or NA, set to value > L
+  if (any(is.infinite(x = data[,dObj$lag])) ||
+      any(is.na(x = data[,dObj$lag]))) {
+    tst <- is.infinite(x = data[,dObj$lag]) | is.na(x = data[,dObj$lag])
+    data[tst, dObj$lag] <- L + 10.0
+  }
+
+  if (any(data[,dObj$lag] < 1e-8)) {
+    warning("0 valued lag times found in data", call. = FALSE)
   }
 
   ## Delta

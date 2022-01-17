@@ -4,48 +4,46 @@
 \alias{ve}
 \title{Retrieve the Estimated Vaccine Efficacy}
 \usage{
-ve(x, taus = NULL, nTau = 20L)
+ve(x, times = NULL, nTimes = 20L)
 }
 \arguments{
 \item{x}{An object of class VEwaningVariant. The object returned by a call to
 veWaningVariant()}
 
-\item{taus}{A numeric vector object or NULL. The times since first
-vaccination dose at which
-the vaccine efficacy is to be estimated. If NULL, a vector of length nTau
-spanning the range [lag, maxTau], where maxTau is the maximum tau
-identified from the original analysis. Values provided outside of
-[lag, maxTau] are ignored.}
+\item{times}{A numeric vector object or NULL. The times since full
+efficacy at which the vaccine efficacy is to be estimated. If NULL, the
+times will be generated internally as a vector of length nTimes spanning
+the range [0, maxTime], where maxTime is the maximum time since vaccination  
+present in the original analysis. Values provided outside of [0, maxTime] 
+are ignored.}
 
-\item{nTau}{An integer object. The number of tau values at which
-estimates are provided. The default is 20. If input taus
-is specified, this input is ignored.}
+\item{nTimes}{An integer object. The number of time values at which
+estimates are obtained. The default is 20. If input times is a vector
+object, this input is ignored.}
 }
 \value{
 A matrix object. The first column contains the times since
-  vaccination at which the estimates are provided; the second column
+  full efficacy at which the estimates are provided; the second column
   contains estimated vaccine efficacy or relative infection rate 
   (see Details); and the third is the standard error.
 }
 \description{
 Uses a prior veWaningVariant() analysis to estimate the vaccine efficacy
-  at the provided times since first vaccination dose.
+  at the provided times since full efficacy.
 }
 \details{
 When the variant under analysis is present only in the unblinded phase, 
- vaccine efficacy
- cannot be estimated. In this case, ve() returns the infection rate at 
- \eqn{\tau}{tau} = \eqn{\ell}{l} divided by the infection rate at 
- \eqn{\tau}{tau}. Recall that \eqn{\tau}{tau} is the time since vaccination,
- and \eqn{\ell}{l} is the period of time required to reach full efficacy
- after first vaccination dose.
+  vaccine efficacy cannot be estimated. In this case, ve() returns the  
+  relative infection rate at times t since full efficacy reached, defined  
+  as infection rate at time t = time since full efficacy reached  
+  divided by the infection rate at the time full efficacy is reached (t=0).
 }
 \examples{
 data(variantData)
 
 set.seed(1234)
 
-ind <- sample(1:nrow(variantData), 2500)
+ind <- sample(1:nrow(variantData), 2000)
 # NOTE: This sample size is chosen for example only -- larger data sets
 # should be used.
 
@@ -54,5 +52,5 @@ res <- veWaningVariant(data = variantData[ind,],
                        gFunc = 'piece', 
                        v = c(15,30))
 
-ve(x = res, taus = c(10,20,30,40,50))
+ve(x = res, times = c(10,20,30,40,50))
 }

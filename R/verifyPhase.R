@@ -14,7 +14,14 @@ setMethod(f = ".verifyPhase",
 
 setMethod(f = ".verifyPhase",
           signature = c(phase = "character"),
-          definition = function(phase, ..., data, subset, dObj) { 
+          definition = function(phase, ..., cutoff, data, subset, dObj) { 
+
+              if (!is.numeric(x = cutoff)) {
+                stop("cutoff must numeric [0,1]", call. = FALSE)
+              }
+              if (cutoff < 0.0 || cutoff > 1.0) {
+                stop("cutoff must numeric [0,1]", call. = FALSE)
+              }
 
               phase <- tolower(x = phase)
 
@@ -40,21 +47,23 @@ setMethod(f = ".verifyPhase",
 
                 # both phases to be included in analysis -- make sure 
                 # sufficient #s are present
-                if (nInfTimesB < max(round(0.1*{nInfTimesB + nInfTimesU}),1.0)) {
+                if (nInfTimesB < max(round(cutoff*{nInfTimesB + nInfTimesU}),1.0)) {
 
-                  message("< 10% of infections occurred during the blinded phase;\n",
-                          sprintf("%10d", nInfTimesB), " infections during blinded phase\n",
-                          "         only the unblinded phase is included in analysis")
+                  message("< ", round(x = cutoff*100, digits = 2),
+                          "% (", nInfTimesB, "/", {nInfTimesB + nInfTimesU},
+                          ") of infections occurred during the unblinded phase;\n",
+                          "only the blinded phase is included in analysis")
                   infTimesBlinded <- NULL
                   nInfTimesB <- 0L
 
                   phaseType <- 1L
 
-                } else if (nInfTimesU < max(round(0.1*{nInfTimesB + nInfTimesU}),1.0)) {
+                } else if (nInfTimesU < max(round(cutoff*{nInfTimesB + nInfTimesU}),1.0)) {
 
-                  message("< 10% of infections occurred during the unblinded phase;\n",
-                          sprintf("%10d", nInfTimesU), " infections during unblinded phase\n",
-                          "         only the blinded phase is included in analysis")
+                  message("< ", round(x = cutoff*100, digits = 2),
+                          "% (", nInfTimesU, "/", {nInfTimesB + nInfTimesU},
+                          ") of infections occurred during the unblinded phase;\n",
+                          "only the blinded phase is included in analysis")
                   infTimesUnblinded <- NULL
                   nInfTimesU <- 0L
 

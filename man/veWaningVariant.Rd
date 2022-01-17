@@ -9,6 +9,7 @@ veWaningVariant(
   L,
   ...,
   phase = "ub",
+  cutoff = 0.1,
   lag = 6,
   modelEntry = NULL,
   modelUnblind0 = NULL,
@@ -43,10 +44,20 @@ Default is ="ub", indicating that both blinded and unblinded phases will be
 used to estimate theta values if possible. If ="b", only the blinded
 phase will be used. If ="u", only the unblinded phase will be used.}
 
-\item{lag}{A scalar numeric object. The lag time between 
-the initial vaccine dose and full efficacy for all participants. 
-The default value is 6 weeks (42 days) -- NOTE this assumes that the
-data are on the scale of weeks.}
+\item{cutoff}{A numeric object. The minimum proportion of infections that
+must occur during a phase to be included in the analysis. The default
+is 0.1 (10 %). Specifically -- if < 10% of the infections occur during the 
+blinded (unblinded) phase, only the unblinded (blinded) phase will be 
+included in the analysis.}
+
+\item{lag}{A scalar numeric, numeric vector, or character object. The lag 
+time(s) between the initial vaccine dose and full efficacy. If a scalar,
+the provided lag time applies to all participants. If a numeric vector,
+the vector contains the individual specific lag time for each participant
+(see details for further information).
+If character, the column header of the data containing the lag times.
+The default value is a scalar value of 6 weeks (42 days) -- NOTE this 
+assumes that the data are on the scale of weeks.}
 
 \item{modelEntry}{A formula object or NULL. The coxph model for entry times.
 The LHS is set as the appropriate Surv() object internally. If a LHS
@@ -138,7 +149,7 @@ A an S3 object of class "VEwaningVariant", which comprises a list
   \item{theta}{A vector object containing the estimated theta parameters.}
   \item{cov}{The covariance estimated using the sandwich estimator.}
   \item{SE}{The standard error estimated using the sandwich estimator.}
-  and attributes  "gFunc", "maxTau", "lag", "v", "phaseType", and "wgtType", 
+  and attributes  "gFunc", "maxTime", "v", "phaseType", and "wgtType", 
   which store
   details of the original analysis that are required for post-processing
   convenience functions ve() and plot(). See details for further
@@ -181,6 +192,10 @@ Analysis data must include the following information:
 Data can include baseline covariates. Methods for time-dependent covariates
  are not currently available.
 
+If input lag is provided as a numeric vector or as a column of the data,
+  lag values should be set to Inf or NA for participants that do not reach 
+  full efficacy.
+
 There are 3 possible weighting options, the selection of which is determined
  by the combination of model inputs. 
   \describe{
@@ -198,8 +213,7 @@ The returned S3 object has 6 attributes needed for post-processing
  tools ve() and plot(). Specifically, "gFunc" is an integer object
  specifying the model selected for the infection rate (based on input gFunc);
  "v", the knots or cut-offs to be used by gFunc (input v);
- "maxTau", the maximum vaccination time included in the analysis; 
- "lag", the lag time between the initial vaccine dose and full efficacy;
+ "maxTime", the maximum time since full efficacy included in the analysis; 
  "phaseType", =1 only unblinded phase, =2, only blinded phase, =3 both phases,
  and "wgtType", =0 no weighting, =1 censor weighting, =2 full weighting.
 }

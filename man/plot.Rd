@@ -5,7 +5,7 @@
 \alias{plot.VEwaningVariant}
 \title{Plot Analysis Results}
 \usage{
-\method{plot}{VEwaningVariant}(x, y, ..., taus = NULL, xlim = NULL, nTau = 20L, ylim = NULL)
+\method{plot}{VEwaningVariant}(x, y, ..., times = NULL, xlim = NULL, nTimes = 20L, ylim = NULL)
 }
 \arguments{
 \item{x}{An object of class VEwaningVariant. The object returned by a call to
@@ -15,22 +15,22 @@ veWaningVariant()}
 
 \item{...}{Ignored}
 
-\item{taus}{A numeric vector object or NULL. The tau values at which
-estimates are to be calculated. If NULL, a vector of length nTau
-spanning the range [lag, maxTau], where maxTau is the maximum tau
-identified from the training data; if xlim is specified, 
-[xlim[1], xlim[2]] is used instead. Note that all values must lie in the
-range [lag, maxTau].}
+\item{times}{A numeric vector object or NULL. The times since full
+efficacy at which the vaccine efficacy is to be estimated. If NULL, the
+times will be generated internally as a vector of length nTimes spanning
+the range [0, maxTime], where maxTime is the maximum time since vaccination  
+present in the original analysis. Values provided outside of [0, maxTime] 
+are ignored.}
 
 \item{xlim}{A numeric vector object of length 2 or NULL. The extrema
-of the tau values at which estimates
-are to be calculated. A vector of length nTau spanning the
-range [xlim[1], xlim[2]] is generated. Note that the specified limits must
-lie in the range [lag, maxTau]. If taus is specified, this input is ignored.}
+of the times values at which estimates are to be calculated. A vector of 
+length nTimes spanning the range [xlim[1], xlim[2]] is generated. Note 
+that the specified limits must lie in the range [0, maxTime]. If input 
+times is a vector object, this input is ignored.}
 
-\item{nTau}{An integer object. The number of tau values at which
-estimates are provided. The default is 20. If taus
-is specified, this input is ignored.}
+\item{nTimes}{An integer object. The number of time values at which
+estimates are obatined. The default is 20. If input times is a vector
+object, this input is ignored.}
 
 \item{ylim}{A numeric vector object or NULL. The y-axis limits for the plots.
 If NULL, the y-axis limits are taken from the estimated values.}
@@ -42,20 +42,18 @@ A gg object.
 Plot the Estimated Vaccine Efficacy
 }
 \details{
-When the variant under analysis is present only in the unblinded phase or
- only the unblinded phase was included in the analysis, vaccine efficacy
- cannot be estimated. In this case, plot() shows the infection rate at 
- \eqn{\tau}{tau} = \eqn{\ell}{l} divided by the infection rate at 
- \eqn{\tau}{tau}. Recall that \eqn{\tau}{tau} is the time since vaccination,
- and \eqn{\ell}{l} is the period of time required to reach full efficacy
- after the initial vaccination dose.
+When the variant under analysis is present only in the unblinded phase, 
+  vaccine efficacy cannot be estimated. In this case, plot() shows the  
+  relative infection rate at times t since full efficacy reached, defined  
+  as infection rate at time t = time since full efficacy reached  
+  divided by the infection rate at the time full efficacy is reached (t=0).
 }
 \examples{
 data(variantData)
 
 set.seed(1234)
 
-ind <- sample(1:nrow(x = variantData), 2500, FALSE)
+ind <- sample(1:nrow(x = variantData), 2000, FALSE)
 
 # NOTE: This sample size is chosen for example only -- larger data sets
 # should be used.

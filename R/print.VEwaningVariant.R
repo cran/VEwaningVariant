@@ -17,7 +17,7 @@
 #'
 #' set.seed(1234)
 #'
-#' ind <- sample(1:nrow(variantData), 2500)
+#' ind <- sample(1:nrow(variantData), 2000)
 #' # NOTE: This sample size is chosen for example only -- larger data sets
 #' # should be used.
 #' 

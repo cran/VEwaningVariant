@@ -1,0 +1,10 @@
+VEwaningVariant v1.2 (Release date: 2022-01-17)
+==============
+
+Changes:
+
+Allow for participant specific lag times. This change required that the
+post-processing tools, ve() and plot(), be modified to refer to 
+"time since full efficacy" rather the original "time since first dose".
+
+Allow for user specified cutoff for including/excluding phases in the analysis.
