@@ -110,7 +110,7 @@
 #'   models must be NULL. See Details for further information.
 #'
 #' @param gFunc A character vector object. The model of infection rates.
-#'   Must be one of {'lin', 'piece', 'splin', 'spcub'} for the linear,
+#'   Must be one of \{'lin', 'piece', 'splin', 'spcub'\} for the linear,
 #'   piecewise constant, linear spline, and cubic spline models, respectively.
 #'
 #' @param variant An integer object. The variant for the analysis. If 0,
@@ -184,6 +184,9 @@
 #'
 #' @export
 #' @examples
+#' \dontshow{
+#'   RcppArmadillo::armadillo_throttle_cores(2)
+#' }
 #' data(variantData)
 #'
 #' set.seed(1234)
@@ -227,6 +230,7 @@
 #' @import survival
 #' @import Rcpp
 #' @import methods
+#' @importFrom RcppArmadillo armadillo_throttle_cores
 #' @include verifyInputs.R verifyModels.R verifyPhase.R 
 #' @include fitERPsi.R fitCensor.R esttheta.R
 #'

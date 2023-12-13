@@ -49,6 +49,9 @@ When the variant under analysis is present only in the unblinded phase,
   divided by the infection rate at the time full efficacy is reached (t=0).
 }
 \examples{
+\dontshow{
+  RcppArmadillo::armadillo_throttle_cores(2)
+}
 data(variantData)
 
 set.seed(1234)

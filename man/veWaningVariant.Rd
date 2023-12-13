@@ -91,7 +91,7 @@ object internally. If a LHS is provided, it is ignored. If NULL, all other
 models must be NULL. See Details for further information.}
 
 \item{gFunc}{A character vector object. The model of infection rates.
-Must be one of {'lin', 'piece', 'splin', 'spcub'} for the linear,
+Must be one of \{'lin', 'piece', 'splin', 'spcub'\} for the linear,
 piecewise constant, linear spline, and cubic spline models, respectively.}
 
 \item{variant}{An integer object. The variant for the analysis. If 0,
@@ -218,6 +218,9 @@ The returned S3 object has 6 attributes needed for post-processing
  and "wgtType", =0 no weighting, =1 censor weighting, =2 full weighting.
 }
 \examples{
+\dontshow{
+  RcppArmadillo::armadillo_throttle_cores(2)
+}
 data(variantData)
 
 set.seed(1234)

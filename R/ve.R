@@ -31,6 +31,10 @@
 #'
 #' @name ve
 #' @examples
+#' 
+#' \dontshow{
+#'   RcppArmadillo::armadillo_throttle_cores(2)
+#' }
 #' data(variantData)
 #'
 #' set.seed(1234)

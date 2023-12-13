@@ -1,3 +1,19 @@
+VEwaningVariant v1.4 (Release date: 2023-12-13)
+==============
+
+Changes: 
+
+Documentation update to correct brackets; 
+remove C++11 compilation flag; and 
+throttled armadillo cores in examples
+
+
+VEwaningVariant v1.3 (Release date: 2022-06-05)
+==============
+
+Changes: Maintainer e-mail update
+
+
 VEwaningVariant v1.2 (Release date: 2022-01-17)
 ==============
 
